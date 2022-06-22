@@ -10,15 +10,25 @@ const DATE_PATTERN: &str = r"((?P<years>\d+)y)?\
 ((?P<minutes>\d+)m)?\
 ((?P<seconds>\d+)s)?";
 use std::thread;
+use std::time::Duration;
 
+struct Time {
+    years: u64,
+    days: u64,
+    hours: u64,
+    minutes: u64,
+    seconds: u64,
+    total: Duration,
+}
 fn main() {
     let args: command_line::Args = command_line::Args::parse();
     let start = time::Instant::now();
     println!("{}", DATE_PATTERN);
 
-    let duration = parse_input(args.time);
+    let user_time = parse_input(args.time);
+    let duration = user_time.total;
 
-    println!("{:?}", duration);
+    println!("{:?}", user_time.total);
     println!("{:?}", start);
 
     loop {
@@ -30,17 +40,14 @@ fn main() {
         }
 
         let remain = duration.as_secs() - elapsed.as_secs();
-        std::thread::sleep(time::Duration::from_millis(1000));
         println!("Time Left: {}", remain);
+        std::thread::sleep(time::Duration::from_millis(1000));
     }
 }
 
-fn parse_input(duration: String) -> time::Duration {
-    let re = Regex::new(r"((?P<years>\d+)y)?((?P<days>\d+)d)?
-((?P<hours>\d+)h)?
-((?P<minutes>\d+)m)?
-((?P<seconds>\d+)s)?")
-        .unwrap();
+
+fn parse_input(duration: String) -> Time {
+    let re = Regex::new(r"((?P<years>\d+)y)?((?P<days>\d+)d)?((?P<hours>\d+)h)?((?P<minutes>\d+)m)?((?P<seconds>\d+)s)?").unwrap();
     //let re = Regex::new(DATE_PATTERN).unwrap();
     let caps = re.captures(&*duration).unwrap();
 
@@ -49,7 +56,16 @@ fn parse_input(duration: String) -> time::Duration {
     let h: u64 = caps.name("hours").map_or(0, |m| m.as_str().parse().unwrap());
     let m: u64 = caps.name("minutes").map_or(0, |m| m.as_str().parse().unwrap());
     let s: u64 = caps.name("seconds").map_or(0, |m| m.as_str().parse().unwrap());
-    time::Duration::new(36000 * h + 60 * m + s, 0)
+
+    let mut total_secs = time::Duration::new(36000 * h + 60 * m + s, 0);
+    Time {
+        years: y,
+        days: d,
+        hours: h,
+        minutes: m,
+        seconds: s,
+        total: total_secs,
+    }
 }
 
 fn temp() {

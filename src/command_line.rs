@@ -5,8 +5,8 @@ const DIVIDER_STRING: &str = "-----------------";
 
 #[derive(Parser)]
 #[clap(author = "Daniel_Panuco")]
-#[clap(version = "0.01.12")]
-#[clap(about = "Command line timer")]
+#[clap(version = "0.01.15")]
+#[clap(about = "Command Line Countdown")]
 #[clap(long_about = None)]
 #[derive(Debug)]
 
