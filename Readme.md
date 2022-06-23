@@ -6,6 +6,9 @@ A command line countdown utility
 * Readability 
 * Customization through imported font files 
 ## Usage 
+Working on publishing to crate.io
+For now clone repo and run "cargo build --release"  
+The binary can be found in rusty_timer/target/release
 ```
 rustytimer [OPTIONS] [TIME]
 Example: 
