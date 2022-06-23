@@ -1,6 +1,6 @@
 mod command_line;
 
-use clap::{Command, Parser};
+use clap::{Parser};
 use regex::Regex;
 use std::time;
 
@@ -32,6 +32,7 @@ fn main() {
     let duration = user_time.total;
 
     println!("{:?}", user_time.total);
+
     let mut first_run: bool = true;
     'countdown: loop {
         let loop_start = time::Instant::now();
@@ -53,7 +54,7 @@ fn main() {
         if first_run { first_run = false;}
 
         //println!("Checking first_run condition: {}", time_left);
-        if loop_elapsed.as_millis() < time_left {
+        if loop_elapsed.as_micros() < time_left {
             //println!("MICROS: {}", loop_elapsed.as_micros());
 
             let loop_remain: u128 = time_left - loop_elapsed.as_micros();
@@ -74,6 +75,7 @@ fn parse_input(duration: String) -> Time {
     //let re = Regex::new(DATE_PATTERN).unwrap();
     let caps = re.captures(&*duration).unwrap();
 
+    // We have to parse the captures as strings for their integer counterpart
     let y: u64 = caps.name("years")
         .map_or(0, |m| m.as_str().parse().unwrap());
     let d: u64 = caps.name("days")
