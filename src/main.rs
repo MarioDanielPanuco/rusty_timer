@@ -24,22 +24,21 @@ struct Time {
 fn main() {
     let start = time::Instant::now();
     let args: command_line::Args = command_line::Args::parse();
-    println!("{}", DATE_PATTERN);
+    //println!("{}", DATE_PATTERN);
 
     let user_time = parse_input(args.time);
     let duration = user_time.total;
 
     println!("{:?}", user_time.total);
-    println!("{:?}", start);
-    let first_run: bool = false;
-    loop {
+    let mut first_run: bool = true;
+    'countdown: loop {
         let loop_start = time::Instant::now();
-        println!("How many ms have elapsed since start of main: {}", start.elapsed().as_millis());
+        //println!("How many ms have elapsed since start of main: {}", start.elapsed().as_millis());
         let elapsed = start.elapsed();
 
         if duration < elapsed {
             println!("BOOM | TIME HAS RUN OUT");
-            break;
+            break 'countdown;
         }
 
         let remain = duration.as_secs() - elapsed.as_secs();
@@ -48,14 +47,17 @@ fn main() {
             true => start.elapsed().as_micros(),
             false => 1_000_000,
         };
+
+        if first_run { first_run = false;}
+
+        //println!("Checking first_run condition: {}", time_left);
         if loop_elapsed.as_millis() < time_left {
-            println!("MICROS: {}", loop_elapsed.as_micros());
+            //println!("MICROS: {}", loop_elapsed.as_micros());
 
             let loop_remain: u128 = time_left - loop_elapsed.as_micros();
-            println!("REMAIN: {}", loop_remain);
-
+            //println!("REMAIN: {}", loop_remain);
+            // Sleeps main thread until the second is finished, then it prints out
             thread::sleep(Duration::from_micros(remain));
-
         };
 
         println!("Time Left: {:?}", remain);
@@ -68,11 +70,16 @@ fn parse_input(duration: String) -> Time {
     //let re = Regex::new(DATE_PATTERN).unwrap();
     let caps = re.captures(&*duration).unwrap();
 
-    let y: u64 = caps.name("years").map_or(0, |m| m.as_str().parse().unwrap());
-    let d: u64 = caps.name("days").map_or(0, |m| m.as_str().parse().unwrap());
-    let h: u64 = caps.name("hours").map_or(0, |m| m.as_str().parse().unwrap());
-    let m: u64 = caps.name("minutes").map_or(0, |m| m.as_str().parse().unwrap());
-    let s: u64 = caps.name("seconds").map_or(0, |m| m.as_str().parse().unwrap());
+    let y: u64 = caps.name("years")
+        .map_or(0, |m| m.as_str().parse().unwrap());
+    let d: u64 = caps.name("days")
+        .map_or(0, |m| m.as_str().parse().unwrap());
+    let h: u64 = caps.name("hours")
+        .map_or(0, |m| m.as_str().parse().unwrap());
+    let m: u64 = caps.name("minutes")
+        .map_or(0, |m| m.as_str().parse().unwrap());
+    let s: u64 = caps.name("seconds")
+        .map_or(0, |m| m.as_str().parse().unwrap());
 
     let total_secs = Duration::new(36000 * h + 60 * m + s, 0);
     Time {

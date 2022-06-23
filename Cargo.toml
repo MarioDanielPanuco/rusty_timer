@@ -1,11 +1,18 @@
 [package]
 name = "rusty_timer"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
+authors = ["Mario Daniel Panuco mpanuco@ucsc.edu"]
+license = "MIT"
+description = "Command line countdown utility"
+readme = "Readme.md"
+homepage = "https://github.com/MarioDanielPanuco/rusty_timer"
+repository = "https://github.com/MarioDanielPanuco/rusty_timer"
+keywords = ["cli", "timer", "countdown"]
+categories = ["command-line-utilities"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 clap = { version = "3.2.1", features = ["derive"] }
 regex = "1.5.6"
-# crossterm = "0.23.2"
