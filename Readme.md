@@ -7,7 +7,7 @@ A command line countdown utility
 * Customization through imported font files 
 ## Usage 
 Working on publishing to crate.io
-For now clone repo and run "cargo build --release"  
+For now clone repo, install rustup from Rust's website, and run "cargo build --release"  
 The binary can be found in rusty_timer/target/release
 ```
 rustytimer [OPTIONS] [TIME]

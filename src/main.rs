@@ -9,6 +9,7 @@ const DATE_PATTERN: &str = r"((?P<years>\d+)y)?\
 ((?P<hours>\d+)h)?\
 ((?P<minutes>\d+)m)?\
 ((?P<seconds>\d+)s)?";
+
 use std::thread;
 use std::time::Duration;
 
