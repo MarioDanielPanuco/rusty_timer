@@ -4,8 +4,8 @@ use std::fmt::Formatter;
 const DIVIDER_STRING: &str = "-----------------";
 
 #[derive(Parser)]
-#[clap(author = "Daniel_Panuco")]
-#[clap(version = "0.01.15")]
+#[clap(author = "Mario Daniel Panuco")]
+#[clap(version = "0.2.1")]
 #[clap(about = "Command Line Countdown")]
 #[clap(long_about = None)]
 #[derive(Debug)]

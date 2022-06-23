@@ -12,6 +12,7 @@ const DATE_PATTERN: &str = r"((?P<years>\d+)y)?\
 use std::thread;
 use std::time::Duration;
 
+#[allow(unused_variables)]
 struct Time {
     years: u64,
     days: u64,
@@ -56,6 +57,7 @@ fn main() {
 
             let loop_remain: u128 = time_left - loop_elapsed.as_micros();
             //println!("REMAIN: {}", loop_remain);
+
             // Sleeps main thread until the second is finished, then it prints out
             thread::sleep(Duration::from_micros(remain));
         };
@@ -65,6 +67,7 @@ fn main() {
     }
 }
 
+// TODO: Use constant raw string literal for pattern matching
 fn parse_input(duration: String) -> Time {
     let re = Regex::new(r"((?P<years>\d+)y)?((?P<days>\d+)d)?((?P<hours>\d+)h)?((?P<minutes>\d+)m)?((?P<seconds>\d+)s)?").unwrap();
     //let re = Regex::new(DATE_PATTERN).unwrap();
@@ -92,22 +95,9 @@ fn parse_input(duration: String) -> Time {
     }
 }
 
-fn temp() {
-    let args: command_line::Args = command_line::Args::parse();
-    let re = Regex::new(DATE_PATTERN).unwrap();
-
-    println!("Time: {}", args.time);
-
-    let caps = re.captures(&*args.time).unwrap();
-    println!("Length of capture: {}", caps.len());
-
-    // let caps = re.captures(&*args.time).unwrap();
-    for cap in re.captures_iter(&*args.time) {
-        println!("{}", cap.get(4).unwrap().as_str());
-    };
-
-}
-fn turn_time_to_seconds(time: String) -> i32 {
+// TODO: Turn remaining time to printable formatted string
+#[allow(dead_code)]
+fn turn_time_to_string(time: Duration) -> String {
     unimplemented!()
 }
 
