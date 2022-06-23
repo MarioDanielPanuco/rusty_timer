@@ -2,7 +2,7 @@
 A command line countdown utility 
 
 ## Goals 
-* Accuracy Currently accurate to the micro-second (thousandth of a second) 
+* Accuracy - Currently accurate to the micro-second (thousandth of a second) 
 * Readability 
 * Customization through imported font files 
 ## Usage 
