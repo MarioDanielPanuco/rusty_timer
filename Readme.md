@@ -25,4 +25,3 @@ $ rustytimer 3m
 
 ## TODOS
 * Font customization and output 
-* Remove second of wait during first iteration of countdown loop 
