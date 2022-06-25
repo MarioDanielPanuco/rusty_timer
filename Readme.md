@@ -1,8 +1,15 @@
 # Rusty Timer 
 A command line countdown utility 
+## Warning 
+This project is still very much a work in progress. I plan on finishing 99% of it by July 2nd, 2022. 
 
-## Goals 
-* Accuracy - Currently accurate to the micro-second (thousandth of a second) 
+## Current Working Features 
+* Functions as a stopwatch (currently accurate to the micro-second (thousandth of a second)) 
+* Clears terminal before printing the updated time 
+* Parses command line properly
+
+## Project Goals 
+* Accuracy 
 * Readability 
 * Customization through imported font files 
 ## Usage 
@@ -18,4 +25,3 @@ $ rustytimer 3m
 
 ## TODOS
 * Font customization and output 
-* Remove second of wait during first iteration of countdown loop 
