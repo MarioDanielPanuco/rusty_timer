@@ -3,17 +3,18 @@ mod command_line;
 use std::io::stdout;
 use clap::{Parser};
 use regex::Regex;
-use std::time;
+use std::{thread, time::Duration, time};
+use clap::ArgAction::Set;
+use crossterm::{execute,
+                style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
+                ExecutableCommand,
+                Result, event, queue, terminal};
 
 const DATE_PATTERN: &str = r"((?P<years>\d+)y)?\
 (?P<days>\d+)d)?\
 ((?P<hours>\d+)h)?\
 ((?P<minutes>\d+)m)?\
 ((?P<seconds>\d+)s)?";
-
-use std::thread;
-use std::time::Duration;
-use clap::ArgAction::Set;
 
 #[allow(unused_variables)]
 struct Time {
@@ -25,11 +26,6 @@ struct Time {
     total: Duration,
 }
 
-use crossterm::{execute,
-                style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
-                ExecutableCommand,
-                Result, event, queue, terminal};
-
 fn main() -> Result<()> {
     let start = time::Instant::now();
     let args: command_line::Args = command_line::Args::parse();
@@ -37,7 +33,7 @@ fn main() -> Result<()> {
     let duration = user_time.total;
     let mut first_run: bool = true;
 
-    stdout().execute(SetForegroundColor(Color::Green))?;
+    stdout().execute(SetForegroundColor(Color::Green))?; 
     stdout().execute(SetBackgroundColor(Color::Black))?;
 
     println!("Counting down from: {:?}", user_time.total);
@@ -49,7 +45,7 @@ fn main() -> Result<()> {
         let elapsed = start.elapsed();
 
         if duration < elapsed {
-            println!("BOOM | TIME HAS RUN OUT");
+            exit_program();
             break 'countdown;
         }
 
@@ -62,7 +58,7 @@ fn main() -> Result<()> {
 
         if first_run { first_run = false;}
 
-        execute!(stdout(), terminal::Clear(terminal::ClearType::All));
+        execute!(stdout(), terminal::Clear(terminal::ClearType::All)).expect("Failed to clear");
 
         let loop_elapsed = loop_start.elapsed();
         //println!("Checking first_run condition: {}", time_left);
@@ -70,16 +66,23 @@ fn main() -> Result<()> {
             //println!("MICROS: {}", loop_elapsed.as_micros());
 
             let loop_remain: u128 = time_left - loop_elapsed.as_micros();
-            //println!("REMAIN: {}", loop_remain);
+            // println!("LOOP_REMAIN: {}", loop_remain);
+            // println!("Remain: {}", remain);
 
             // Sleeps main thread until the second is finished, then it prints out
-            thread::sleep(Duration::from_micros(remain));
+            thread::sleep(Duration::from_micros(loop_remain as u64));
         };
 
         println!("Time Left: {:?}", remain);
-        thread::sleep(Duration::from_millis(1000));
+        // thread::sleep(Duration::from_millis(1000));
     }
     Ok(())
+}
+
+fn exit_program()  {
+    println!("BOOM | TIME IS UP");
+    stdout().execute(ResetColor)
+        .expect("Failed to reset colors");
 }
 
 // TODO: Use constant raw string literal for pattern matching
