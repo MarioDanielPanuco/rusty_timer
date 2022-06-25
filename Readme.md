@@ -1,6 +1,7 @@
 # Rusty Timer 
 A command line countdown utility 
-
+## Warning 
+This project is still very much a work in progress. I plan on finishing most of it by July 2nd, 2022. 
 ## Goals 
 * Accuracy - Currently accurate to the micro-second (thousandth of a second) 
 * Readability 
