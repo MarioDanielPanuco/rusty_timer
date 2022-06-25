@@ -1,5 +1,6 @@
 mod command_line;
 
+use std::io::stdout;
 use clap::{Parser};
 use regex::Regex;
 use std::time;
@@ -12,6 +13,7 @@ const DATE_PATTERN: &str = r"((?P<years>\d+)y)?\
 
 use std::thread;
 use std::time::Duration;
+use clap::ArgAction::Set;
 
 #[allow(unused_variables)]
 struct Time {
@@ -23,20 +25,27 @@ struct Time {
     total: Duration,
 }
 
-fn main() {
+use crossterm::{execute,
+                style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
+                ExecutableCommand,
+                Result, event, queue, terminal};
+
+fn main() -> Result<()> {
     let start = time::Instant::now();
     let args: command_line::Args = command_line::Args::parse();
-    //println!("{}", DATE_PATTERN);
-
     let user_time = parse_input(args.time);
     let duration = user_time.total;
-
-    println!("{:?}", user_time.total);
-
     let mut first_run: bool = true;
+
+    stdout().execute(SetForegroundColor(Color::Green))?;
+    stdout().execute(SetBackgroundColor(Color::Black))?;
+
+    println!("Counting down from: {:?}", user_time.total);
+
+    stdout().execute(SetForegroundColor(Color::Red))?;
+
     'countdown: loop {
         let loop_start = time::Instant::now();
-        //println!("How many ms have elapsed since start of main: {}", start.elapsed().as_millis());
         let elapsed = start.elapsed();
 
         if duration < elapsed {
@@ -45,7 +54,7 @@ fn main() {
         }
 
         let remain = duration.as_secs() - elapsed.as_secs();
-        let loop_elapsed = loop_start.elapsed();
+
         let time_left = match first_run {
             true => start.elapsed().as_micros(),
             false => 1_000_000,
@@ -53,6 +62,9 @@ fn main() {
 
         if first_run { first_run = false;}
 
+        execute!(stdout(), terminal::Clear(terminal::ClearType::All));
+
+        let loop_elapsed = loop_start.elapsed();
         //println!("Checking first_run condition: {}", time_left);
         if loop_elapsed.as_micros() < time_left {
             //println!("MICROS: {}", loop_elapsed.as_micros());
@@ -67,6 +79,7 @@ fn main() {
         println!("Time Left: {:?}", remain);
         thread::sleep(Duration::from_millis(1000));
     }
+    Ok(())
 }
 
 // TODO: Use constant raw string literal for pattern matching
