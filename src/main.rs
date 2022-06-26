@@ -71,20 +71,24 @@ fn main() -> Result<()> {
             loop_remain = time_left - loop_elapsed.as_micros();
             // println!("LOOP_REMAIN: {}", loop_remain);
             // println!("Remain: {}", remain);
-
-            // Sleeps main thread until the second is finished, then it prints out
         };
 
-        let stringer = standard_font.convert(&remain.to_string().as_str()).expect("failed");
-        println!("{}",  stringer);
-        //println!("Time Left: {:?}", remain);
+        output_timer(remain, &standard_font);
+        // Sleeps main thread until the second is finished, then it prints out
         thread::sleep(Duration::from_micros(loop_remain as u64));
         // thread::sleep(Duration::from_millis(1000));
     }
     Ok(())
 }
 
+fn output_timer(remain: u64, font: &FIGfont) {
+    let stringer = font.convert(remain.to_string().as_str()).expect("failed");
+
+    println!("{}",  stringer);
+}
 fn exit_program()  {
+    stdout().execute(terminal::Clear(terminal::ClearType::All)
+    ).expect("Failed to clear terminal");
     println!("BOOM | TIME IS UP");
     stdout().execute(ResetColor)
         .expect("Failed to reset colors");
