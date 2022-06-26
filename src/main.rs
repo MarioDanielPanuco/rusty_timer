@@ -1,5 +1,6 @@
 mod command_line;
 
+use figlet_rs::FIGfont;
 use std::io::stdout;
 use clap::{Parser};
 use regex::Regex;
@@ -32,7 +33,7 @@ fn main() -> Result<()> {
     let user_time = parse_input(args.time);
     let duration = user_time.total;
     let mut first_run: bool = true;
-
+    let standard_font = FIGfont::standand().unwrap(); 
     stdout().execute(SetForegroundColor(Color::Green))?; 
     stdout().execute(SetBackgroundColor(Color::Black))?;
 
@@ -74,7 +75,9 @@ fn main() -> Result<()> {
             // Sleeps main thread until the second is finished, then it prints out
         };
 
-        println!("Time Left: {:?}", remain);
+        let stringer = standard_font.convert(&remain.to_string().as_str()).expect("failed");
+        println!("{}",  stringer);
+        //println!("Time Left: {:?}", remain);
         thread::sleep(Duration::from_micros(loop_remain as u64));
         // thread::sleep(Duration::from_millis(1000));
     }
