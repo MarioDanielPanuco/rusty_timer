@@ -58,22 +58,24 @@ fn main() -> Result<()> {
 
         if first_run { first_run = false;}
 
-        execute!(stdout(), terminal::Clear(terminal::ClearType::All)).expect("Failed to clear");
+        execute!(stdout(), terminal::Clear(terminal::ClearType::FromCursorUp))
+            .expect("Failed to clear");
 
         let loop_elapsed = loop_start.elapsed();
         //println!("Checking first_run condition: {}", time_left);
+        let mut loop_remain: u128 = time_left;
+
         if loop_elapsed.as_micros() < time_left {
             //println!("MICROS: {}", loop_elapsed.as_micros());
-
-            let loop_remain: u128 = time_left - loop_elapsed.as_micros();
+            loop_remain = time_left - loop_elapsed.as_micros();
             // println!("LOOP_REMAIN: {}", loop_remain);
             // println!("Remain: {}", remain);
 
             // Sleeps main thread until the second is finished, then it prints out
-            thread::sleep(Duration::from_micros(loop_remain as u64));
         };
 
         println!("Time Left: {:?}", remain);
+        thread::sleep(Duration::from_micros(loop_remain as u64));
         // thread::sleep(Duration::from_millis(1000));
     }
     Ok(())
