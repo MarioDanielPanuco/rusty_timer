@@ -52,7 +52,7 @@ fn main() -> Result<()> {
         let remain = duration.as_secs() - elapsed.as_secs();
 
         let time_left = match first_run {
-            true => start.elapsed().as_micros(),
+            true => 1_000_000 - start.elapsed().as_micros(),
             false => 1_000_000,
         };
 
