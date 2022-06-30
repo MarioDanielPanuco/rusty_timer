@@ -4,6 +4,7 @@ use figlet_rs::FIGfont;
 use clap::{Parser, ArgAction::Set};
 use regex::Regex;
 use std::{io::stdout, thread, time::Duration, time};
+use std::str::FromStr;
 use crossterm::{execute,
                 style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
                 ExecutableCommand,
@@ -28,13 +29,12 @@ fn main() -> Result<()> {
     let user_time = parse_input(args.time);
     let duration = user_time.total;
     let mut first_run: bool = true;
-    let standard_font = FIGfont::standand().unwrap(); 
-    stdout().execute(SetForegroundColor(Color::Green))?; 
-    stdout().execute(SetBackgroundColor(Color::Black))?;
+    let standard_font = FIGfont::standand().unwrap();
 
-    println!("Counting down from: {:?}", user_time.total);
-
-    stdout().execute(SetForegroundColor(Color::Red))?;
+    stdout().execute(SetBackgroundColor(
+        Color::from_str(&*args.back_color).unwrap()))?;
+    stdout().execute(SetForegroundColor(
+        Color::from_str(&*args.text_color).unwrap()))?;
 
     'countdown: loop {
         let loop_start = time::Instant::now();
@@ -77,14 +77,14 @@ fn main() -> Result<()> {
 }
 
 fn output_timer(remain: u64, font: &FIGfont) {
-    let stringer = font.convert(remain.to_string().as_str()).expect("failed");
-    
-    println!("{}",  stringer);
+    let font_string = font.convert(remain.to_string().as_str())
+        .expect("failed");
+    println!("{}", font_string);
 }
 
 fn exit_program()  {
-    stdout().execute(terminal::Clear(terminal::ClearType::All)
-    ).expect("Failed to clear terminal");
+    stdout().execute(terminal::Clear(terminal::ClearType::All))
+        .expect("Failed to clear terminal");
     println!("BOOM | TIME IS UP");
     stdout().execute(ResetColor)
         .expect("Failed to reset colors");

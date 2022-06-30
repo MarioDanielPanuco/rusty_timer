@@ -13,6 +13,10 @@ const DIVIDER_STRING: &str = "-----------------";
 pub struct Args {
     // #[clap(short = 't', long = "time", value_parser)]
     pub time: String,
+    #[clap(short = 'c', long = "color", value_parser, default_value = "white")]
+    pub text_color: String,
+    #[clap(short = 'b', long = "background", value_parser, default_value = "black")]
+    pub back_color: String,
 }
 
 impl std::fmt::Display for Args {
