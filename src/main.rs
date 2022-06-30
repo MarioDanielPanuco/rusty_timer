@@ -29,7 +29,8 @@ fn main() -> Result<()> {
     let user_time = parse_input(args.time);
     let duration = user_time.total;
     let mut first_run: bool = true;
-    let standard_font = FIGfont::standand().unwrap();
+    let standard_font = FIGfont::standand()
+        .expect("Failed to create figfont");
 
     stdout().execute(SetBackgroundColor(
         Color::from_str(&*args.back_color).unwrap()))?;
@@ -91,7 +92,9 @@ fn exit_program()  {
 }
 
 fn parse_input(duration: String) -> Time {
-    let re = Regex::new(DATE_PATTERN).unwrap();
+    let re = Regex::new(DATE_PATTERN)
+        .expect("Failed to create regex");
+
     let caps = re.captures(&*duration).unwrap();
 
     // We have to parse the captures as strings for their integer counterpart
