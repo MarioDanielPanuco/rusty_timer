@@ -1,21 +1,16 @@
 mod command_line;
 
 use figlet_rs::FIGfont;
-use std::io::stdout;
-use clap::{Parser};
+use clap::{Parser, ArgAction::Set};
 use regex::Regex;
-use std::{thread, time::Duration, time};
-use clap::ArgAction::Set;
+use std::{io::stdout, thread, time::Duration, time};
 use crossterm::{execute,
                 style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
                 ExecutableCommand,
                 Result, event, queue, terminal};
 
-const DATE_PATTERN: &str = r"((?P<years>\d+)y)?\
-(?P<days>\d+)d)?\
-((?P<hours>\d+)h)?\
-((?P<minutes>\d+)m)?\
-((?P<seconds>\d+)s)?";
+const DATE_PATTERN: &str =
+    r"((?P<years>\d+)y)?((?P<days>\d+)d)?((?P<hours>\d+)h)?((?P<minutes>\d+)m)?((?P<seconds>\d+)s)?";
 
 #[allow(unused_variables)]
 struct Time {
@@ -71,29 +66,32 @@ fn main() -> Result<()> {
             loop_remain = time_left - loop_elapsed.as_micros();
             // println!("LOOP_REMAIN: {}", loop_remain);
             // println!("Remain: {}", remain);
-
-            // Sleeps main thread until the second is finished, then it prints out
         };
 
-        let stringer = standard_font.convert(&remain.to_string().as_str()).expect("failed");
-        println!("{}",  stringer);
-        //println!("Time Left: {:?}", remain);
+        output_timer(remain, &standard_font);
+        // Sleeps main thread until the second is finished, then it prints out
         thread::sleep(Duration::from_micros(loop_remain as u64));
         // thread::sleep(Duration::from_millis(1000));
     }
     Ok(())
 }
 
+fn output_timer(remain: u64, font: &FIGfont) {
+    let stringer = font.convert(remain.to_string().as_str()).expect("failed");
+    
+    println!("{}",  stringer);
+}
+
 fn exit_program()  {
+    stdout().execute(terminal::Clear(terminal::ClearType::All)
+    ).expect("Failed to clear terminal");
     println!("BOOM | TIME IS UP");
     stdout().execute(ResetColor)
         .expect("Failed to reset colors");
 }
 
-// TODO: Use constant raw string literal for pattern matching
 fn parse_input(duration: String) -> Time {
-    let re = Regex::new(r"((?P<years>\d+)y)?((?P<days>\d+)d)?((?P<hours>\d+)h)?((?P<minutes>\d+)m)?((?P<seconds>\d+)s)?").unwrap();
-    //let re = Regex::new(DATE_PATTERN).unwrap();
+    let re = Regex::new(DATE_PATTERN).unwrap();
     let caps = re.captures(&*duration).unwrap();
 
     // We have to parse the captures as strings for their integer counterpart
@@ -108,7 +106,7 @@ fn parse_input(duration: String) -> Time {
     let s: u64 = caps.name("seconds")
         .map_or(0, |m| m.as_str().parse().unwrap());
 
-    let total_secs = Duration::new(36000 * h + 60 * m + s, 0);
+    let total_secs = Duration::new(d * (24 * 36_000) + 36000 * h + 60 * m + s, 0);
     Time {
         years: y,
         days: d,
