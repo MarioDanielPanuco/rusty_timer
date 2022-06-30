@@ -7,6 +7,7 @@ This project is still very much a work in progress. I plan on finishing 99% of i
 * Functions as a stopwatch (currently accurate to the micro-second (thousandth of a second)) 
 * Clears terminal before printing the updated time 
 * Parses command line properly
+* Linux Support
 
 ## Project Goals 
 * Accuracy 
@@ -23,5 +24,6 @@ $ rustytimer 3m
     This runs the timer from 3 minutes to 0
 ```
 
-## TODOS
+## Missing Features
 * Font customization and output 
+* Mac and Windows support
