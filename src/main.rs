@@ -42,15 +42,16 @@ fn main() -> Result<()> {
         let elapsed = start.elapsed();
 
         if duration < elapsed {
-            exit_program();
+            exit_program(&standard_font);
             break 'countdown;
         }
 
         let remain = duration.as_secs() - elapsed.as_secs();
 
         let time_left = match first_run {
-            true => 1_000_000 - start.elapsed().as_micros(),
-            false => 1_000_000,
+            // true => 1_000_000 - start.elapsed().as_micros(),
+            true => 1_000_000_000 - start.elapsed().as_nanos(),
+            false => 1_000_000_000,
         };
 
         if first_run { first_run = false;}
@@ -60,18 +61,18 @@ fn main() -> Result<()> {
 
         let loop_elapsed = loop_start.elapsed();
         //println!("Checking first_run condition: {}", time_left);
-        let mut loop_remain: u128 = time_left;
+        let mut loop_remain: u128 = time_left ;
 
-        if loop_elapsed.as_micros() < time_left {
+        if loop_elapsed.as_nanos() < time_left {
             //println!("MICROS: {}", loop_elapsed.as_micros());
-            loop_remain = time_left - loop_elapsed.as_micros();
+            loop_remain = time_left - loop_elapsed.as_nanos();
             // println!("LOOP_REMAIN: {}", loop_remain);
             // println!("Remain: {}", remain);
         };
 
         output_timer(remain, &standard_font);
         // Sleeps main thread until the second is finished, then it prints out
-        thread::sleep(Duration::from_micros(loop_remain as u64));
+        thread::sleep(Duration::from_nanos(loop_remain as u64));
         // thread::sleep(Duration::from_millis(1000));
     }
     Ok(())
@@ -83,12 +84,20 @@ fn output_timer(remain: u64, font: &FIGfont) {
     println!("{}", font_string);
 }
 
-fn exit_program()  {
+fn exit_program(font: &FIGfont)  {
     stdout().execute(terminal::Clear(terminal::ClearType::All))
         .expect("Failed to clear terminal");
-    println!("BOOM | TIME IS UP");
+    print_fig_string("BOOM | TIME IS UP", font);
+    // println!("BOOM | TIME IS UP");
     stdout().execute(ResetColor)
         .expect("Failed to reset colors");
+}
+
+fn print_fig_string(str: &str, font: &FIGfont) {
+    let font_string = font.convert(str)
+        .expect("Failed to convert str to fig font");
+
+    println!("{}", font_string);
 }
 
 fn parse_input(duration: String) -> Time {
@@ -123,7 +132,7 @@ fn parse_input(duration: String) -> Time {
 // TODO: Turn remaining time to printable formatted string
 #[allow(dead_code)]
 fn turn_time_to_string(time: Duration) -> String {
-    unimplemented!()
+    todo!()
 }
 
 
