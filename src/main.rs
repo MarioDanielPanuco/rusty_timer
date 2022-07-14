@@ -49,7 +49,6 @@ fn main() -> Result<()> {
         let remain = duration.as_secs() - elapsed.as_secs();
 
         let time_left = match first_run {
-            // true => 1_000_000 - start.elapsed().as_micros(),
             true => 1_000_000_000 - start.elapsed().as_nanos(),
             false => 1_000_000_000,
         };
@@ -71,9 +70,9 @@ fn main() -> Result<()> {
         };
 
         output_timer(remain, &standard_font);
+
         // Sleeps main thread until the second is finished, then it prints out
         thread::sleep(Duration::from_nanos(loop_remain as u64));
-        // thread::sleep(Duration::from_millis(1000));
     }
     Ok(())
 }
@@ -81,13 +80,16 @@ fn main() -> Result<()> {
 fn output_timer(remain: u64, font: &FIGfont) {
     let font_string = font.convert(remain.to_string().as_str())
         .expect("failed");
+
     println!("{}", font_string);
 }
 
 fn exit_program(font: &FIGfont)  {
     stdout().execute(terminal::Clear(terminal::ClearType::All))
         .expect("Failed to clear terminal");
+
     print_fig_string("BOOM | TIME IS UP", font);
+
     // println!("BOOM | TIME IS UP");
     stdout().execute(ResetColor)
         .expect("Failed to reset colors");
@@ -134,5 +136,3 @@ fn parse_input(duration: String) -> Time {
 fn turn_time_to_string(time: Duration) -> String {
     todo!()
 }
-
-
