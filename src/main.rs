@@ -4,6 +4,7 @@ use figlet_rs::FIGfont;
 use clap::{Parser, ArgAction::Set};
 use regex::Regex;
 use std::{io::stdout, thread, time::Duration, time};
+use std::fmt::format;
 use std::str::FromStr;
 use crossterm::{execute,
                 style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
@@ -77,9 +78,35 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn output_timer(remain: u64, font: &FIGfont) {
-    let font_string = font.convert(remain.to_string().as_str())
-        .expect("failed");
+fn output_timer(mut remain: u64, font: &FIGfont) {
+    let day = remain / (24 * 3600);
+    remain %= (24 * 3600);
+
+    let hour = remain / 3600;
+    remain %= 3600;
+
+    let minutes = remain / 60;
+    remain %= 60;
+
+    let seconds = remain;
+
+    let mut str: String = String::new();
+
+    if day != 0 {
+        str.push_str(format!("{}D ", day).as_str());
+    }
+    if hour != 0 {
+        str.push_str(format!("{}H ", hour).as_str());
+    }
+    if minutes != 0 {
+        str.push_str(format!("{}M ", minutes).as_str());
+    }
+    if seconds != 0 {
+        str.push_str(format!("{}S", seconds).as_str());
+    }
+
+    let font_string = font.convert(str.as_str())
+        .expect("Failed to format string");
 
     println!("{}", font_string);
 }
@@ -120,7 +147,7 @@ fn parse_input(duration: String) -> Time {
     let s: u64 = caps.name("seconds")
         .map_or(0, |m| m.as_str().parse().unwrap());
 
-    let total_secs = Duration::new(d * (24 * 36_000) + 36000 * h + 60 * m + s, 0);
+    let total_secs = Duration::new(d * (24 * 3_600) + 3_600 * h + 60 * m + s, 0);
     Time {
         years: y,
         days: d,
