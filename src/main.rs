@@ -80,7 +80,7 @@ fn main() -> Result<()> {
 
 fn output_timer(mut remain: u64, font: &FIGfont) {
     let day = remain / (24 * 3600);
-    remain %= (24 * 3600);
+    remain %= 24 * 3600;
 
     let hour = remain / 3600;
     remain %= 3600;
