@@ -4,10 +4,9 @@ A command line countdown utility
 This project is still a work in progress, but the basic functionality works. 
 
 ## Current Working Features 
-* Functions as a stopwatch (currently accurate to the micro-second (thousandth of a second)) 
+* Functions as a stopwatch (currently accurate to the nano-second 
 * Clears terminal before printing the updated time 
 * Parses command line properly
-* Linux Support
 
 ## Project Goals 
 * Accuracy 
@@ -28,4 +27,3 @@ $ rustytimer 3m -b black -c red
 
 ## Missing Features
 * Font customization and output 
-* Mac and Windows release binary support
