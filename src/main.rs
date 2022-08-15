@@ -69,8 +69,8 @@ fn main() -> Result<()> {
             // println!("LOOP_REMAIN: {}", loop_remain);
             // println!("Remain: {}", remain);
         };
-
-        output_timer(remain, &standard_font);
+        let str = from_time(remain);
+        output_timer(str, &standard_font);
 
         // Sleeps main thread until the second is finished, then it prints out
         thread::sleep(Duration::from_nanos(loop_remain as u64));
@@ -78,33 +78,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn output_timer(mut remain: u64, font: &FIGfont) {
-    let day = remain / (24 * 3600);
-    remain %= 24 * 3600;
-
-    let hour = remain / 3600;
-    remain %= 3600;
-
-    let minutes = remain / 60;
-    remain %= 60;
-
-    let seconds = remain;
-
-    let mut str: String = String::new();
-
-    if day != 0 {
-        str.push_str(format!("{}D ", day).as_str());
-    }
-    if hour != 0 {
-        str.push_str(format!("{}H ", hour).as_str());
-    }
-    if minutes != 0 {
-        str.push_str(format!("{}M ", minutes).as_str());
-    }
-    if seconds != 0 {
-        str.push_str(format!("{}S", seconds).as_str());
-    }
-
+fn output_timer(str: String, font: &FIGfont) {
     let font_string = font.convert(str.as_str())
         .expect("Failed to format string");
 
@@ -158,8 +132,34 @@ fn parse_input(duration: String) -> Time {
     }
 }
 
-// TODO: Turn remaining time to printable formatted string
-#[allow(dead_code)]
-fn turn_time_to_string(time: Duration) -> String {
-    todo!()
+fn from_time(mut remain: u64) -> String {
+    let day = remain / (24 * 3600);
+    remain %= 24 * 3600;
+
+    let hour = remain / 3600;
+    remain %= 3600;
+
+    let minutes = remain / 60;
+    remain %= 60;
+
+    let seconds = remain;
+    let mut str: String = String::new();
+
+    if day != 0 {
+        str.push_str(format!("{}D ", day).as_str());
+    }
+
+    if hour != 0 {
+        str.push_str(format!("{}H ", hour).as_str());
+    }
+
+    if minutes != 0 {
+        str.push_str(format!("{}M ", minutes).as_str());
+    }
+
+    if seconds != 0 {
+        str.push_str(format!("{}S", seconds).as_str());
+    }
+
+    str
 }
