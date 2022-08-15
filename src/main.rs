@@ -115,7 +115,7 @@ fn exit_program(font: &FIGfont)  {
     stdout().execute(terminal::Clear(terminal::ClearType::All))
         .expect("Failed to clear terminal");
 
-    print_fig_string("BOOM | TIME IS UP", font);
+    print_fig_string("BOOM", font);
 
     // println!("BOOM | TIME IS UP");
     stdout().execute(ResetColor)

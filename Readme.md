@@ -4,7 +4,7 @@ A command line countdown utility
 This project is still a work in progress, but the basic functionality works. 
 
 ## Current Working Features 
-* Functions as a stopwatch (currently accurate to the nano-second 
+* Functions as a stopwatch (currently accurate to the nano-second) 
 * Clears terminal before printing the updated time 
 * Parses command line properly
 
@@ -20,7 +20,9 @@ The binary can be found in rusty_timer/target/release
 ```
 rustytimer [TIME] [OPTIONS]
 Example: 
-$ rustytimer 3m -b black -c red
+$ cargo build --release 
+$ cd target/release
+$ ./rustytimer 3m -b black -c red
     This runs the timer from 3 minutes to 0  
     with black background and red text
 ```
