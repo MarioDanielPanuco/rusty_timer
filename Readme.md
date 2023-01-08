@@ -1,7 +1,5 @@
 # Rusty Timer 
 A command line countdown utility 
-## Warning 
-This project is still a work in progress, but the basic functionality works. 
 
 ## Current Working Features 
 * Functions as a stopwatch (currently accurate to the nano-second) 
